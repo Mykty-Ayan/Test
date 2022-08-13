@@ -24,7 +24,6 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', type=str, default='0.0.0.0')
     parser.add_argument('--port', type=str, default=8888)
-    parser.add_argument('--secrets-dir', type=str, required=True)
 
     return parser.parse_args()
 
