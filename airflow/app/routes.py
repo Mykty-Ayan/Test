@@ -2,7 +2,9 @@ import typing as tp
 
 from aiohttp import web
 
-from provider_a.app.context import AppContext
+from app.context import AppContext
+from app.api.v1 import result
+from app.api.v1 import search
 
 
 def wrap_handler(handler, context: AppContext) -> tp.Callable:
@@ -14,16 +16,16 @@ def wrap_handler(handler, context: AppContext) -> tp.Callable:
 
 def setup_routes(app: web.Application, ctx: AppContext) -> None:
     app.router.add_post(
-        '/v1/search',
+        '/v1/search/',
         wrap_handler(
-                # TODO
+            search.handle,
             ctx,
         ),
     )
     app.router.add_get(
-        '/v1/result/{search_id}/{currency}',
+        '/v1/result/{search_id}/{currency}/',
         wrap_handler(
-            # TODO
-            ctx
+            result.handle,
+            ctx,
         )
     )
