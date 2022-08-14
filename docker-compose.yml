@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  airflow:
+    build: ./airflow
+    command: python main.py --secrets-dir secrets
+    ports:
+      - '9000:9000'
+    depends_on:
+      - mongo-db
+      - provider-a
+      - provider-b
+    networks:
+      - internal
+
+  provider-a:
+    build: ./provider_a
+    command: python main.py
+    ports:
+      - '8889:8889'
+    networks:
+      - internal
+
+  provider-b:
+    build: ./provider_b
+    command: python main.py
+    ports:
+      - '8888:8888'
+    networks:
+      - internal
+
+  mongo-db:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    networks:
+      -  internal
+
+networks:
+  internal:
+    driver: 'bridge'
