@@ -4,18 +4,12 @@ import argparse
 from aiohttp import web
 
 from app import routes
-from app.context import AppContext
 
 
-async def create_app(args):
+async def create_app():
     app = web.Application()
 
-    ctx = AppContext(secrets_dir=args.secrets_dir)
-
-    app.on_startup.append(ctx.on_startup)
-    app.on_shutdown.append(ctx.on_shutdown)
-
-    routes.setup_routes(app, ctx)
+    routes.setup_routes(app)
 
     return app
 
@@ -31,7 +25,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    app = asyncio.get_event_loop().run_until_complete(create_app(args))
+    app = asyncio.get_event_loop().run_until_complete(create_app())
 
     web.run_app(app, host=args.host, port=args.port)
 
