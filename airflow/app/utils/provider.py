@@ -15,7 +15,7 @@ class ProviderClient(BaseProviderClient):
 
     @staticmethod
     async def get_tickets(base_url: str):
-        async with aiohttp.ClientSession(base_url) as session:
+        async with aiohttp.ClientSession(base_url, trust_env=True) as session:
             async with session.post(
                     '/v1/search/'
             ) as response:
@@ -23,5 +23,5 @@ class ProviderClient(BaseProviderClient):
                     return None
 
                 data = await response.json()
-                print(data)
+
                 return data

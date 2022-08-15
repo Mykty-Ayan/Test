@@ -2,7 +2,7 @@
 
 echo "Waiting for mongo..."
 
-while ! nc -z web-db 27017 ; do
+while ! nc -z mongo-db 27017 ; do
     sleep 0.1
 done
 

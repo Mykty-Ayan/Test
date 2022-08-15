@@ -1,4 +1,5 @@
 import asyncio
+import threading
 
 import uuid
 
@@ -6,12 +7,9 @@ from aiohttp import web
 
 from app import context
 from app.utils import tickets
+from app.utils import tasks
 
 
 async def handle(request: web.Request, ctx: context.AppContext) -> web.Response:
-    search_id = str(uuid.uuid4())
-
-    all_tickets = await tickets.get_tickets(ctx)
-
-
+    search_id = tasks.generate_search(context)
     return web.json_response({'search_id': search_id})
