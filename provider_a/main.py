@@ -17,7 +17,7 @@ async def create_app():
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', type=str, default='0.0.0.0')
-    parser.add_argument('--port', type=str, default=8889)
+    parser.add_argument('--port', type=int, default=8889)
 
     return parser.parse_args()
 
