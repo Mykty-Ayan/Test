@@ -25,7 +25,8 @@ class AppContext:
     async def on_shutdown(self, app=None):
         self.client.close()
 
-    def create_scheduler(self) -> async_scheduler.AsyncIOScheduler:
+    @staticmethod
+    def create_scheduler() -> async_scheduler.AsyncIOScheduler:
         return async_scheduler.AsyncIOScheduler({
             'apscheduler.jobstores.mongo': {
                 'type': 'mongodb'
