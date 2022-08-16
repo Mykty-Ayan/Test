@@ -16,6 +16,7 @@ class AppContext:
         self.secrets: secrets.SecretsReader = secrets.SecretsReader(secrets_dir)
         self.client: pymongo.MongoClient = pymongo.MongoClient(self.secrets.get('mongodb'))
         self.db: tp.Optional[database.Database] = None
+        self.scheduler: async_scheduler.AsyncIOScheduler = self.create_scheduler()
 
     async def on_startup(self, app=None):
 
@@ -23,3 +24,12 @@ class AppContext:
 
     async def on_shutdown(self, app=None):
         self.client.close()
+
+    def create_scheduler(self) -> async_scheduler.AsyncIOScheduler:
+        return async_scheduler.AsyncIOScheduler({
+            'apscheduler.jobstores.mongo': {
+                'type': 'mongodb'
+            },
+            'apscheduler.timezone': 'Asia/Almaty'
+        })
+        
