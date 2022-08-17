@@ -45,3 +45,16 @@ class Ticket:
     validating_airline: str
     pricing: Pricing
     flights: tp.List[Flight] = dataclasses.field(default_factory=list)
+
+
+@dataclasses.dataclass
+class Currency:
+    fullname: str
+    title: str
+    description: float
+    quantity: int
+    to_date: datetime.datetime
+
+    @classmethod
+    def from_xml(cls, fullname: str, title: str, description: float, quantity: int, to_date: datetime.datetime):
+        return cls(fullname=fullname, title=title, description=description, quantity=quantity, to_date=to_date)
