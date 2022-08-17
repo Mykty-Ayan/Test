@@ -7,7 +7,8 @@ import aiohttp
 
 from lxml import etree
 
-from airflow.app import dto
+from app import dto
+from app import storage
 
 
 class BaseProviderClient(abc.ABC):
@@ -47,8 +48,9 @@ class CurrencyProvider:
                 data = await response.read()
                 return data
 
-    async def get_currencies(self, base_url: str, to_date: datetime.datetime) -> tp.Optional[list[dto.Currency]]:
-        response = await self._get_currencies(base_url, to_date)
+    @staticmethod
+    async def get_currencies(base_url: str, to_date: datetime.datetime) -> tp.Optional[list[dto.Currency]]:
+        response = await CurrencyProvider._get_currencies(base_url, to_date)
         if response is None:
             return None
         tree = etree.fromstring(response)

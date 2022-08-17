@@ -10,7 +10,7 @@ from apscheduler.triggers import cron
 from pymongo import database
 
 from app.utils import secrets
-from app.utils import currencies
+from app.utils import providers
 
 
 class AppContext:
@@ -39,9 +39,11 @@ class AppContext:
         })
 
     def add_currency_jobs(self):
-        currency_job: tp.Optional[job.Job] = self.scheduler._lookup_job('currency', jobstore_alias='mongodb')
+        currency_job: tp.Optional[job.Job] = self.scheduler.get_job('currency', jobstore='mongodb')
         if currency_job is not None:
             return
+
+        today = datetime.datetime.today()
         currency_trigger = cron.CronTrigger(
             year='*',
             month='*',
@@ -52,10 +54,14 @@ class AppContext:
             second='*'
         )
         self.scheduler.add_job(
-            currencies.collect_currency_rate,
+            providers.CurrencyProvider.get_currencies,
+            args=(
+                self.secrets.get('national_bank'),
+                today,
+            ),
             id='currency',
-            name='currency',
+            name='currency',    
             trigger=currency_trigger,
             jobstore='mongodb',
-            next_run_time=datetime.datetime.today() + datetime.timedelta(seconds=10)
+            next_run_time=today + datetime.timedelta(seconds=10)
         )
